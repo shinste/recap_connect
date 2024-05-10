@@ -36,3 +36,196 @@
     transform: rotate(360deg);
   }
 }
+
+.Flex {
+  display: flex;
+}
+
+.Vertical-flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.Vertical-align {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.Bar-dimensions {
+  background-color: #F0F0F0;
+  width: 350px;
+  height: 100vh;
+  padding: 25px;
+}
+
+.Friends {
+  height: 850px;
+}
+
+p {
+  color: #EF6880;
+  margin-bottom: 0;
+}
+
+.Bold {
+  font-weight: bold;
+}
+
+.Search-width {
+  width: 350px;
+}
+
+
+.Add-div {
+  margin-left: auto;
+}
+
+.Add-button {
+  padding: 0
+}
+
+#Group-bar {
+  display: flex;
+  height: 100px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.Line {
+  width: 100%;
+  margin: 0;
+}
+
+#Logo {
+  width: 140px;
+  height: 50px;
+}
+
+#Buttons {
+  display: flex;
+  justify-content: space-evenly;
+  width: 150px;
+}
+
+#Chat-box {
+  overflow-y: auto;
+  height: 680px;
+  width: 100%;
+  padding: 10px;
+  position: relative;
+}
+
+#Chat-insert {
+  position: absolute;
+  background-color: #FFDCE2;
+  bottom: 0;
+  height: 130px;
+  width: 100%;
+}
+
+.View-height {
+  height: 100vh;
+  position: relative;
+}
+
+#Chat-text {
+  width: 1450px;
+  height: 90px;
+  margin-top: 20px;
+  margin-left: 30px;
+  display: flex;
+}
+
+#Pop-up {
+  background-color: white;
+  width: 1250px;
+  min-height: 100px;
+  height: fit-content;
+  font-size: 10px;
+  font-weight: bold;
+  flex-wrap: wrap-reverse;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  max-height: 80vh;
+}
+
+#File-hold {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  border: #FFECEF solid;
+  border-radius: 12px;
+  padding: 5px;
+}
+
+#File-display {
+  position: absolute;
+  top: 0;
+  margin: 5px;
+  display: flex;
+}
+
+#Messagecontent {
+  background-color: #FFECEF;
+  max-width: 500px;
+  width: max-content;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+#Mymessage {
+  display: flex;
+  margin-bottom: 50px;
+  justify-content: flex-end;
+}
+
+.P-message {
+  padding: 12px;
+  color: black;
+  margin-bottom: 0;
+}
+
+#Image {
+  width: 200px;
+  height: 200px;
+}
+
+.Avatar {
+  margin-top: auto;
+  margin-left: 17px;
+  height: 35px;
+  width: 35px;
+}
+
+.Response-avatar {
+  margin-top: auto;
+  margin-right: 17px;
+  height: 35px;
+  width: 35px;
+}
+
+
+@media (max-width: 1099px) {
+  .Bar-dimensions {
+    background-color: #F0F0F0;
+    width: 230px;
+    height: 100vh;
+    padding: 25px;
+  }
+  .Search-width {
+    width: 150px;
+  }
+  .User {
+    width: 180px;
+  }
+  .Name {
+    overflow-x: auto;
+  }
+
+  #Pop-up {
+    width: 600px;
+  }
+}
