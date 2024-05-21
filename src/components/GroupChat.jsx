@@ -14,6 +14,7 @@ import Response from '../functions/Response';
 import Popup from 'reactjs-popup';
 import PaperClip from '../images/paperclip.png';
 import Detail from '../images/detail.png';
+import Photos from './Photos';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -215,7 +216,7 @@ const GroupChat = ({participants}) => {
             <div className="Vertical-flex px-5">
                 <div id="Group-bar" className="Vertical-align">
                     <div className="Flex Vertical-align">
-                        <Avatar sx={{marginRight: '25px', width: '60px', height: '60px'}}>F</Avatar>
+                        <Avatar id="Group-avatar">F</Avatar>
                         <p className="Vertical-align Bold">Friends Forever!</p>
                     </div>
                     <img id="Logo" src={Recap}/>
@@ -234,19 +235,7 @@ const GroupChat = ({participants}) => {
                 <hr className='Line'/>
             </div>
             {details ? 
-                <div style={{margin: '20px', overflowY: 'auto'}}>
-                    <h3>Photos</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '30px', marginTop: '20px'}}>
-                        {conversation.map((image, index) => {
-                            if (image.url) {
-                                return image.url.map((url, idx) => (
-                                <img key={idx} src={url} style={{ width: '100%', height: 'auto' }} />
-                                ));
-                            }
-                        return null;
-                        })}
-                    </div>
-                </div>
+                <Photos conversation={conversation} />
             :
                 <div>
                     <div id="Chat-box">
@@ -256,14 +245,15 @@ const GroupChat = ({participants}) => {
                             <div id="Mymessage">
                                 {message.url.map((url, index) => {
                                     return (
-                                        <div id="Messagecontent" style={{marginRight: '10px'}}>
-                                            <div className="Flex">
-                                                <div className="Vertical-flex">
-                                                    <img id="Image" src={url} style={{width: '200px', height: 'auto'}}/>
-                                                    <div style={{width: '200px'}}>
-                                                        <p className="P-message">{message.text[index]}</p>
-                                                    </div>
+                                        <div className="Image-content">
+                                            <div className="Vertical-flex">
+                                                <img id="Image" src={url} style={{width: '200px', height: 'auto'}}/>
+                                                {message.text[index] && 
+                                                <div id='Caption-div'>
+                                                    <p className="P-message caption-div">{message.text[index]}</p>
                                                 </div>
+                                                }
+                                                
                                             </div>
                                         </div>
                                     );
@@ -341,7 +331,7 @@ const GroupChat = ({participants}) => {
                                                         </div>
                                                     );
                                                 })}
-                                                <Button onClick={handleButtonClick}>Add a photo!</Button>
+                                                <Button onClick={handleButtonClick}><p>Add a photo!</p></Button>
                                             </div>
                                         </Popup>
                                     </div>
@@ -350,7 +340,7 @@ const GroupChat = ({participants}) => {
                         />
                     </div>
                     <Button onClick={() => handleSend(currChat)} className="Vertical-align" sx={{backgroundColor: '#EF6880', borderRadius: 50, height: '70px', width: '70px', marginLeft: '30px', marginTop: 'auto', marginBottom: 'auto'}}>
-                        <img src={Send} style={{height: '40px', padding: '3px 1px 0px 0px'}}/>
+                        <img src={Send} id="Send-button"/>
                     </Button>
                 </div>
             </div>
