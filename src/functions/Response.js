@@ -1,5 +1,5 @@
 
-const Response = () => {
+const Response = (participantNames) => {
     const responses = [
         "Wow, that sounds like an amazing experience!",
         "That's awesome! It sounds like you had a lot of fun.",
@@ -22,7 +22,7 @@ const Response = () => {
         "Remarkable work! Your determination is admirable.",
         "You're unstoppable! Keep up the incredible work."
     ];
-    return responses[Math.floor(Math.random() * responses.length)];
+    return [responses[Math.floor(Math.random() * responses.length)], participantNames[Math.floor(Math.random() * participantNames.length)]];
 
 }
 

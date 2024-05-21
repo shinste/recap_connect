@@ -13,7 +13,7 @@ import { db, storage } from "../firebase";
 import Response from '../functions/Response';
 import Popup from 'reactjs-popup';
 import PaperClip from '../images/paperclip.png';
-import Dialog from '@mui/material/Dialog';
+import Detail from '../images/detail.png';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,17 +44,18 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-const GroupChat = () => {
+const GroupChat = ({participants}) => {
     const classes = useStyles();
     const [conversation, setConversation] = useState([]);
     const [currChat, setCurrChat] = useState('');
     const scrollableRef = useRef(null);
-    const [uploading, setUploading] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const fileInputRef = useRef(null);
     const [captions, setCaptions] = useState([]);
     const [downUrls, setDownUrls] = useState([]);
-    
+    const [participantNames, setParticipantNames] = useState([]);
+    const [details, setDetails] = useState(false);
+
     const getFromDB = async () => {
         try {
             console.log('pull');
@@ -99,7 +100,6 @@ const GroupChat = () => {
                 uploadTask.on(
                     "state_changed",
                     (snapshot) => {
-                        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
                     },
                     reject,
                     () => {
@@ -120,38 +120,15 @@ const GroupChat = () => {
     };
 
     const reply = async (newConversation) => {
-        const responseMessage = Response();
+        const responseMessage = Response(participantNames);
+        console.log(responseMessage, participantNames);
             const responseRef = await addDoc(collection(db, "messages"), {
-            text: responseMessage,
-            user: 'Others',
+            text: responseMessage[0],
+            user: responseMessage[1],
             timestamp: new Date()
             });
-            setConversation(newConversation.concat([{ id: responseRef.id, text: responseMessage, user: 'Others' }]));
+            setConversation(newConversation.concat([{ id: responseRef.id, text: responseMessage[0], user: responseMessage[1] }]));
     }
-
-    // const uploadFile = async (file) => {
-    //     console.log('uploadfiles function')
-    //     try {
-    //         const storageRef = ref(storage, `files/${file.name}`);
-    //         const uploadTask = uploadBytesResumable(storageRef, file);
-    //         uploadTask.on("state_changed",
-    //             (snapshot) => {
-    //                 const progress =
-    //                 Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-    //             },
-    //             (error) => {
-    //                 alert(error);
-    //             },
-    //             () => {
-    //                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-    //                     downUrls.push(downloadURL);
-    //                 });
-    //             })
-    //         } catch (e) {
-    //             console.error("Error adding image: ", e);
-    //         }
-            
-    //     };
 
     const displayImage = async () => {
         try {
@@ -200,7 +177,7 @@ const GroupChat = () => {
         fileInputRef.current.click();
     };
 
-    const handleRemove = (target, name) => {
+    const handleRemove = (target) => {
         setSelectedFiles(selectedFiles.filter((_, index) => index !== target));
         setCaptions(captions.filter((_, index) => index !== target));
         setDownUrls(downUrls.filter((_, index) => index !== target));
@@ -224,6 +201,13 @@ const GroupChat = () => {
         getFromDB();
     }, [])
 
+    useEffect(() => {
+        if (participants) {
+            const newNames = participants.map(obj => obj.user);
+            setParticipantNames(newNames);
+        }
+        
+    }, [participants])
 
 
     return (
@@ -231,7 +215,7 @@ const GroupChat = () => {
             <div className="Vertical-flex px-5">
                 <div id="Group-bar" className="Vertical-align">
                     <div className="Flex Vertical-align">
-                        <Avatar sx={{marginRight: '25px', width: '60px', height: '60px'}}>L</Avatar>
+                        <Avatar sx={{marginRight: '25px', width: '60px', height: '60px'}}>F</Avatar>
                         <p className="Vertical-align Bold">Friends Forever!</p>
                     </div>
                     <img id="Logo" src={Recap}/>
@@ -242,15 +226,30 @@ const GroupChat = () => {
                         <Button sx={{ minWidth: '30px'}}>
                             <img src={Heart} />
                         </Button>
-                        <Button sx={{ minWidth: '30px'}}>
-                            <img src={Bell} />
+                        <Button onClick={() => setDetails(!details)} sx={{ minWidth: '30px'}}>
+                            <img src={Detail} />
                         </Button>
                     </div>
                 </div>
                 <hr className='Line'/>
             </div>
-
-            <div id="Chat-box">
+            {details ? 
+                <div style={{margin: '20px', overflowY: 'auto'}}>
+                    <h3>Photos</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '30px', marginTop: '20px'}}>
+                        {conversation.map((image, index) => {
+                            if (image.url) {
+                                return image.url.map((url, idx) => (
+                                <img key={idx} src={url} style={{ width: '100%', height: 'auto' }} />
+                                ));
+                            }
+                        return null;
+                        })}
+                    </div>
+                </div>
+            :
+                <div>
+                    <div id="Chat-box">
                 {conversation.map((message) => {
                     if (message.url) {
                         return(
@@ -259,8 +258,8 @@ const GroupChat = () => {
                                     return (
                                         <div id="Messagecontent" style={{marginRight: '10px'}}>
                                             <div className="Flex">
-                                                <div className="Vertical-flex" style={{maxHeight: 'max-content'}}>
-                                                    <img id="Image" src={url} style={{width: '200px', height: '200px'}}/>
+                                                <div className="Vertical-flex">
+                                                    <img id="Image" src={url} style={{width: '200px', height: 'auto'}}/>
                                                     <div style={{width: '200px'}}>
                                                         <p className="P-message">{message.text[index]}</p>
                                                     </div>
@@ -355,6 +354,9 @@ const GroupChat = () => {
                     </Button>
                 </div>
             </div>
+                </div>
+                }
+            
         </div>
     );
 }

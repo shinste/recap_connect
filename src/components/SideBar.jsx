@@ -8,7 +8,7 @@ import Add from '../images/add.png';
 import { collection, addDoc, getDocs, query, orderBy, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     roundedInput: {
       '& .MuiInputBase-input': {
         borderRadius: 20,
@@ -18,16 +18,13 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 20,
         width: '100%',
         '& fieldset': {
-            borderColor: '#EF6880', // Set the border color to white
+            borderColor: '#EF6880',
           },
-        // '&:hover fieldset': {
-        //     borderColor: '#FFECEF', // Set the border color to lightgray on hover
-        // },
       },
     },
   }));
 
-const SideBar = () => {
+const SideBar = ({ participants, setParticipants }) => {
     const classes = useStyles();
     const friends = [
         { user: 'Lisa Roy', avatar: 'L'},
@@ -40,6 +37,41 @@ const SideBar = () => {
     const handleSearch = (event) => {
         const new_query = friends.filter((value) => {return value.user.toLowerCase().includes(event.target.value.toLowerCase())});
         setFiltered(new_query);
+    }
+
+    const handleAdd = async(username) => {
+        try {
+            console.log('adding user to groupchat');
+            console.log(participants)
+            const participantRef = await addDoc(collection(db, "participants"), {
+                user: username
+            });
+            const updatedParticipants = participants.concat([{ id: participantRef.id, user: username}]);
+            setParticipants(updatedParticipants);
+        } catch (e) {
+            console.error("Error adding participant: ", e);
+        } 
+    }
+
+    const inGroup = (name) => {
+        return participants.some(participant => participant.user === name);
+    };
+
+    const handleRemove = async (name) => {
+        try {
+            const beforeRemove = await getDocs(collection(db, 'participants'));
+            beforeRemove.forEach(async (doc) => {
+                if (doc.data().user === name) {
+                    await deleteDoc(doc.ref);
+                  }
+            });
+            const newParticipants = participants.filter((participant) => participant.user !== name);
+            setParticipants(newParticipants);
+            console.log('User successfully removed from group');
+            console.log(inGroup(name));
+        } catch (error) {
+            console.error('Error deleting documents:', error);
+        }
     }
 
     return (
@@ -64,14 +96,20 @@ const SideBar = () => {
                 <div className='m-3'>
                     {filtered.map((person) => {
                         return (
-                            <div className='Flex mb-3 User'>
+                            <div key={person.id} className='Flex mb-3 User'>
                                 <Avatar sx={{height: '30px', width: '30px', marginRight: '15px'}}>{person.avatar}</Avatar>
                                 <p className='Vertical-align Name Bold'>{person.user}</p>
                                 <div className='Add-div'>
-                                    <Button sx={{backgroundColor:'#FFECEF'}} variant="contained">
-                                        <img style={{height: '15px', marginRight: '3px'}} src={Add}/>
-                                        <p className='m-0'>Add</p>
-                                    </Button>
+                                    {!inGroup(person.user) ? 
+                                        <Button onClick={() => handleAdd(person.user)} sx={{backgroundColor:'#FFECEF'}} variant="contained">
+                                            <img style={{height: '15px', marginRight: '3px'}} src={Add}/>
+                                            <p className='m-0'>Add</p>
+                                        </Button>
+                                    :
+                                        <Button onClick={() => handleRemove(person.user)}>
+                                            <p className='m-0'>Remove</p>
+                                        </Button>
+                                    }
                                 </div>
                                 
                             </div>
