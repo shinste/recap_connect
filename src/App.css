@@ -225,6 +225,11 @@ p {
   height: 60px;
 }
 
+#Send-button {
+  height: 40px;
+  padding: 3px 1px 0px 0px;
+}
+
 @media (max-width: 1099px) {
   .Bar-dimensions {
     background-color: #F0F0F0;
