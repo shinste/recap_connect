@@ -318,10 +318,10 @@ const GroupChat = ({participants}) => {
                                             onChange={handleFileChange}
                                         />
                                         <Popup trigger={<Button><img src={PaperClip} /></Button>} position="left">
-                                            <div id="Pop-up" className="Flex">
+                                            <div id="Pop-up"className="Flex">
                                                 {selectedFiles.map((file, index) => {
-                                                    return(
-                                                        <div id="File-hold" key={index}>
+                                                    return (
+                                                        <div id="File-hold"key={index}>
                                                             <div className="Flex"> 
                                                                 {file.name}
                                                                 <Button onClick={() => handleRemove(index, file.name)} sx={{width: '30px', height: '30px', marginLeft: 'auto', color: 'red'}}>X</Button>

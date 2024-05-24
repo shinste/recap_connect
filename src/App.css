@@ -150,6 +150,9 @@ p {
   bottom: 0;
   right: 0;
   max-height: 80vh;
+  border: #EF6880 solid;
+  border-width: 1px;
+  border-radius: 16px;
 }
 
 #File-hold {
@@ -159,6 +162,7 @@ p {
   border: #FFECEF solid;
   border-radius: 12px;
   padding: 5px;
+
 }
 
 #File-display {
